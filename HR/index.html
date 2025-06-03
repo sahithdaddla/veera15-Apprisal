@@ -498,10 +498,10 @@
                         <label for="employeeName">Employee Name</label>
                         <input type="text" id="employeeName" 
                             pattern="^[A-Z][a-z'-]+(?:\s+[A-Z][a-z'-]+)*$" 
-                            required maxlength="30"
+                            required minlength="3" maxlength="30"
                             title="Full name with capitalized first letters (e.g., John Smith)">
                         <div id="employeeNameError" class="error-message">
-                            Please enter a valid name (e.g., John Smith).
+                            Please enter a valid name (3-30 characters, e.g., John Smith).
                             Names must start with capital letters and can contain letters, apostrophes, and hyphens.
                         </div>
                     </div>
@@ -516,11 +516,11 @@
                         <label for="position">Position</label>
                         <input type="text" id="position" 
                             pattern="^[A-Z][A-Za-z'-]+(?:\s+[A-Za-z0-9\/'-]+)*$" 
-                            required minlength="2" maxlength="30"
-                            title="Position title (e.g., Senior Developer, Front-End Engineer)">
+                            required minlength="3" maxlength="30"
+                            title="Position title (e.g., Developer, Engineer)">
                         <div id="positionError" class="error-message">
-                            Please enter a valid position title (2-30 characters). Examples: 
-                            Senior Developer, Front-End Engineer, DevOps/SRE.
+                            Please enter a valid position title (3-30 characters). Examples: 
+                            Developer, Engineer, DevOps/SRE.
                             Only letters, numbers, hyphens, and slashes allowed.
                         </div>
                     </div>
@@ -573,21 +573,21 @@
                     
                     <div class="form-group"> 
                         <label for="strengths">Key Strengths 
-                            <span id="strengthsCounter" class="char-counter">0/200 (min. 20 chars)</span>
+                            <span id="strengthsCounter" class="char-counter">0/200 (min. 5 chars)</span>
                         </label>
                         <textarea id="strengths" required maxlength="200"></textarea>
                         <div id="strengthsError" class="error-message">
-                            Please describe at least 3 key strengths (min. 20 characters, only one space between words, no special characters).
+                            Please describe key strengths (min. 5 characters, only one space between words, no special characters).
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="improvements">Areas for Improvement 
-                            <span id="improvementsCounter" class="char-counter">0/200 (min. 15 chars)</span>
+                            <span id="improvementsCounter" class="char-counter">0/200 (min. 4 chars)</span>
                         </label>
                         <textarea id="improvements" required maxlength="200"></textarea>
                         <div id="improvementsError" class="error-message">
-                            Please describe at least 2 areas for improvement (min. 15 characters, only one space between words, no special characters).
+                            Please describe areas for improvement (min. 4 characters, only one space between words, no special characters).
                         </div>
                     </div>
                     
@@ -727,7 +727,7 @@
 
         function validateName(name) {
             const regex = /^[A-Z][a-z'-]+(?:\s+[A-Z][a-z'-]+)*$/;
-            return regex.test(name);
+            return regex.test(name) && name.length >= 3 && name.length <= 30;
         }
 
         function validateEmployeeId(id) {
@@ -737,7 +737,7 @@
 
         function validatePosition(position) {
             const regex = /^[A-Z][A-Za-z'-]+(?:\s+[A-Za-z0-9\/'-]+)*$/;
-            return regex.test(position) && position.length >= 2 && position.length <= 30;
+            return regex.test(position) && position.length >= 3 && position.length <= 30;
         }
 
         function validateDepartment(department) {
@@ -764,12 +764,12 @@
 
         function validateStrengths(text) {
             const normalized = normalizeText(text);
-            return normalized.length >= 20 && normalized.length <= 200 && validTextRegex.test(normalized);
+            return normalized.length >= 5 && normalized.length <= 200 && validTextRegex.test(normalized);
         }
 
         function validateImprovements(text) {
             const normalized = normalizeText(text);
-            return normalized.length >= 15 && normalized.length <= 200 && validTextRegex.test(normalized);
+            return normalized.length >= 4 && normalized.length <= 200 && validTextRegex.test(normalized);
         }
 
         function validateComments(text) {
@@ -795,7 +795,7 @@
                     this.classList.add('error');
                     this.classList.remove('success');
                     errorElement.style.display = 'block';
-                    errorElement.textContent = "Please enter a valid name (e.g., John Smith)";
+                    errorElement.textContent = "Please enter a valid name (3-30 characters, e.g., John Smith)";
                     this.classList.add('shake');
                     setTimeout(() => this.classList.remove('shake'), 500);
                 } else {
@@ -847,7 +847,7 @@
                     this.classList.add('error');
                     this.classList.remove('success');
                     errorElement.style.display = 'block';
-                    errorElement.textContent = "Please enter a valid position (e.g., Senior Developer, Front-End Engineer, DevOps/SRE)";
+                    errorElement.textContent = "Please enter a valid position (3-30 characters, e.g., Developer, Engineer)";
                     this.classList.add('shake');
                     setTimeout(() => this.classList.remove('shake'), 500);
                 } else {
@@ -914,7 +914,7 @@
                 const counter = document.getElementById('strengthsCounter');
                 const charCount = value.length;
                 
-                counter.textContent = `${charCount}/200 (min. 20 chars)`;
+                counter.textContent = `${charCount}/200 (min. 5 chars)`;
                 
                 if (charCount === 0) {
                     this.classList.remove('error', 'success');
@@ -944,7 +944,7 @@
                 const counter = document.getElementById('improvementsCounter');
                 const charCount = value.length;
                 
-                counter.textContent = `${charCount}/200 (min. 15 chars)`;
+                counter.textContent = `${charCount}/200 (min. 4 chars)`;
                 
                 if (charCount === 0) {
                     this.classList.remove('error', 'success');
@@ -1168,8 +1168,8 @@
             });
         }
 
-        setupValidation('strengths', 20, 'strengthsCounter', 'strengthsError', validateStrengths);
-        setupValidation('improvements', 15, "improvementsCounter", 'improvementsError', validateImprovements);
+        setupValidation('strengths', 5, 'strengthsCounter', 'strengthsError', validateStrengths);
+        setupValidation('improvements', 4, "improvementsCounter", 'improvementsError', validateImprovements);
         setupValidation('comments', 0, 'commentsCounter', 'commentsError', validateComments);
     </script>
 </body>
