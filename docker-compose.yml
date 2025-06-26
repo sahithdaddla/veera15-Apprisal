@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: veera15-db
+    ports:
+      - "5489:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: hr_db
+    volumes:
+      - pgdata15:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - apprisal-net
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: veera15-backend
+    ports:
+      - "3060:3060"
+    depends_on:
+      - postgres
+    networks:
+      - apprisal-net
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: veera15-frontend
+    ports:
+      - "8231:80"
+    depends_on:
+      - backend
+      - postgres 
+    networks:
+      - apprisal-net
+
+  hr:
+    build:
+      context: ./HR
+    container_name: veera15-hr
+    ports:
+      - "8232:80"
+    depends_on:
+      - backend
+      - postgres 
+    networks:
+      - apprisal-net
+
+volumes:
+  pgdata15:
+
+networks:
+  apprisal-net:
+
