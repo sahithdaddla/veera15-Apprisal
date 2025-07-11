@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:14
-    container_name: veera15-db
+    container_name: veera155-db
     ports:
       - "5489:5432"
     environment:
